@@ -16,12 +16,6 @@ from   flowcell_parser.classes import RunParametersParser
 
 logger = logging.getLogger(__name__)
 
-
-
-
-
-
-
 def _run_type(run):
     """Tries to read runParameters.xml and returns the run type.
         
@@ -30,12 +24,17 @@ def _run_type(run):
         :rtype: String
         :returns: returns a string with the sequencer type name, None if the sequencer type is unknown
     """
-    
     rppath=os.path.join(run, 'runParameters.xml')
+    if not os.path.isfile(rppath):
+        #For NextSeq the filename seems to start with a capital R
+        rppath=os.path.join(run, 'RunParameters.xml')
+    if not os.path.isfile(rppath):
+        logger.warn("Neither runParameters.xml nor RunParameters.xml could be found in the directory {}. This is quite unexpected. please archive the run {} manually".format(run, run))
+        return None
     try:
-        rp=RunParametersParser(os.path.join(run, 'runParameters.xml'))
+        rp=RunParametersParser(rppath)
     except OSError:
-        logger.warn("Cannot find the runParameters.xml file at {}. This is quite unexpected. please archive the run {} manually".format(rppath, run))
+        logger.warn("Cannot read {}. This is quite unexpected. Please archive the run {} manually".format(rppath, run))
     else:
         try:
             #Works for recent control software
@@ -50,6 +49,8 @@ def _run_type(run):
             return 'MiSeq'
         elif "HiSeq" in runtype:
             return 'HiSeq'
+        elif "NextSeq Control Software" in runtype:
+            return 'NextSeq'
         else:
             logger.warn("unrecognized runtype {}, cannot archive the run {}. Someone as likely bought a new sequencer without telling it to the bioinfo team".format(runtype, run))
             return None
@@ -189,6 +190,9 @@ def run_preprocessing(run, force_trasfer=True):
         elif sequencer_type is 'HiSeq':
             runObj = HiSeq_Run(run, CONFIG["analysis"]["HiSeq"])
         elif sequencer_type is 'MiSeq':
+            print "miseq: to be implemented soon"
+            runObj = None
+        elif sequencer_type is 'NextSeq':
             print "miseq: to be implemented soon"
             runObj = None
         else:
