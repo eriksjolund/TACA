@@ -29,6 +29,6 @@ wget --no-clobber  https://bootstrap.pypa.io/get-pip.py
 python get-pip.py --user
 
 pip install --user illuminate
-pip install --user git+git://github.com/esjolund/flowcell_parser.git
+pip install --user git+git://github.com/vezzi/flowcell_parser.git
 pip install --user git+git://github.com/SciLifeLab/statusdb.git
-pip install --user git+git://github.com/vezzi/TACA.git
+pip install --user git+git://github.com/esjolund/TACA.git
