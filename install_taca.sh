@@ -17,7 +17,7 @@ if [ ! -d "$1" ]; then
 fi
 
 echo "
-export PYTHONUSERBASE=\"\$1\"
+export PYTHONUSERBASE=\"$1\"
 export PATH=\"\$PYTHONUSERBASE/bin:\$PATH\"
 export LD_LIBRARY_PATH=\"\$PYTHONUSERBASE/lib\"
 " > "$1/source_me.sh"
